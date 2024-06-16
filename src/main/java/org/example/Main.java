@@ -2,12 +2,13 @@ package org.example;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import org.example.entities.Passport;
-import org.example.entities.Person;
+import org.example.entities.Comment;
+import org.example.entities.Post;
 import org.example.persistence.CustomPersistenceUnitInfo;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Main {
@@ -24,21 +25,21 @@ public class Main {
         try {
             em.getTransaction().begin();
 
-            Person person = new Person();
-            person.setName("John");
+            Post p = new Post();
+            p.setTitle("Post 1");
+            p.setContent("Post 1 desc");
 
-            Passport passport = new Passport();
-            passport.setNumber("ABC123");
+            Comment c1  = new Comment();
+            c1.setContent("Content comment 1");
+            Comment c2  = new Comment();
+            c2.setContent("Content comment 2");
 
-            person.setPassport(passport);
-            passport.setPerson(person);
+            p.setComments(List.of(c1, c2));
+            c1.setPost(p);
+            c2.setPost(p);
 
-            em.persist(person);
-//            em.persist(passport); // When use cascade = CascadeType.PERSIST in the Person entity this line is not needed
-
-//            TypedQuery<Person> q = em.createQuery("SELECT p FROM Person p WHERE p.passport.number = :number", Person.class);
-//            q.setParameter("number", "ABC123");
-//            System.out.println(q.getResultList());
+            em.persist(p);
+//            em.persist(c1); // Not needed because of cascade = CascadeType.PERSIST in the Post table
 
             em.getTransaction().commit(); // end of transaction
         } finally {
