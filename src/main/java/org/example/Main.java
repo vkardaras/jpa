@@ -2,9 +2,8 @@ package org.example;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import org.example.entities.Employee;
-import org.example.entities.Product;
+import org.example.entities.Student;
+import org.example.entities.keys.StudentKey;
 import org.example.persistence.CustomPersistenceUnitInfo;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
@@ -25,32 +24,20 @@ public class Main {
         try {
             em.getTransaction().begin();
 
-            var e1 = new Employee();
-            e1.setName("John Doe");
-            e1.setAddress("123 Main St");
+//            Product p1 = new Product();
+//            p1.setCode("ABC");
+//            p1.setNumber(10);
+//            p1.setColor("Red");
 
-            em.persist(e1);
+            StudentKey id = new StudentKey();
+            id.setCode("ABC");
+            id.setNumber(10);
 
-            /*
-            // find vs getReference
-//            var e1 = em.find(Employee.class, 1);
-            var e1 = em.getReference(Employee.class, 1); // Creates a shell around the entity and execute any command if the entity is used
-            System.out.println(e1);
+            Student s = new Student();
+            s.setId(id);
+            s.setName("John");
 
-            e1.setName("Anne");
-
-            em.refresh(e1);  // Undo any changes to the object from the last commit
-
-             */
-
-
-//            em.persist();     -> Adding an entity in the context
-//            em.find();        -> Find by PK. Get from DB and add it to the context if it doesn't already exist
-//            em.remove();      -> Marking entity for removal
-//            em.merge();       -> Merges an entity from outside the context to the context
-//            em.refresh();     -> Mirror the context from the database
-//            em.detach();      -> Taking the entity out of the context
-//            em.getReference();
+            em.persist(s);
 
             em.getTransaction().commit(); // end of transaction
         } finally {
