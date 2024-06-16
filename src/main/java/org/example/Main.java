@@ -3,6 +3,7 @@ package org.example;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import org.example.entities.Employee;
 import org.example.entities.Product;
 import org.example.persistence.CustomPersistenceUnitInfo;
 import org.hibernate.jpa.HibernatePersistenceProvider;
@@ -19,13 +20,12 @@ public class Main {
         try {
             em.getTransaction().begin();
 
-            Product p = new Product();
-            p.setId(3L);
-            p.setName("Coffee");
+            Employee e1 = em.find(Employee.class, 3);
+            e1.setName("Peter Brown");
 
-            em.persist(p);  // add this to the context -> NOT AN INSERT QUERY
+            System.out.println(e1);
 
-            em.getTransaction().commit();
+            em.getTransaction().commit(); // end of transaction
         } finally {
             em.close();
         }
