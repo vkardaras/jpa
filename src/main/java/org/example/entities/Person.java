@@ -1,18 +1,18 @@
 package org.example.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import org.hibernate.annotations.GenericGenerator;
+import jakarta.persistence.*;
 
 @Entity
-public class Employee {
+public class Person {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String address;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "passport")
+    private Passport passport;
 
     public int getId() {
         return id;
@@ -30,20 +30,20 @@ public class Employee {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public Passport getPassport() {
+        return passport;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setPassport(Passport passport) {
+        this.passport = passport;
     }
 
     @Override
     public String toString() {
-        return "Employee{" +
+        return "Person{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
+                ", passport=" + passport +
                 '}';
     }
 }

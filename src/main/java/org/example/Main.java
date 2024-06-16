@@ -2,8 +2,8 @@ package org.example;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import org.example.entities.Student;
-import org.example.entities.keys.StudentKey;
+import org.example.entities.Passport;
+import org.example.entities.Person;
 import org.example.persistence.CustomPersistenceUnitInfo;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
@@ -15,7 +15,7 @@ public class Main {
 
         Map<String, String> props = new HashMap<>();
         props.put("hibernate.show_sql", "true");
-        props.put("hibernate.hbm2ddl.auto", "update");  // create, none, update
+        props.put("hibernate.hbm2ddl.auto", "create");  // create, none, update
 
         EntityManagerFactory emf = new HibernatePersistenceProvider()
                 .createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(), props);
@@ -24,20 +24,21 @@ public class Main {
         try {
             em.getTransaction().begin();
 
-//            Product p1 = new Product();
-//            p1.setCode("ABC");
-//            p1.setNumber(10);
-//            p1.setColor("Red");
+            Person person = new Person();
+            person.setName("John");
 
-            StudentKey id = new StudentKey();
-            id.setCode("ABC");
-            id.setNumber(10);
+            Passport passport = new Passport();
+            passport.setNumber("ABC123");
 
-            Student s = new Student();
-            s.setId(id);
-            s.setName("John");
+            person.setPassport(passport);
+            passport.setPerson(person);
 
-            em.persist(s);
+            em.persist(person);
+//            em.persist(passport); // When use cascade = CascadeType.PERSIST in the Person entity this line is not needed
+
+//            TypedQuery<Person> q = em.createQuery("SELECT p FROM Person p WHERE p.passport.number = :number", Person.class);
+//            q.setParameter("number", "ABC123");
+//            System.out.println(q.getResultList());
 
             em.getTransaction().commit(); // end of transaction
         } finally {
