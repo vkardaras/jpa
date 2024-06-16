@@ -12,7 +12,6 @@ import java.util.HashMap;
 public class Main {
     public static void main(String[] args) {
 
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistence-unit");
         EntityManagerFactory emf = new HibernatePersistenceProvider()
                 .createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(), new HashMap<>());
         EntityManager em = emf.createEntityManager(); // represents the context
@@ -21,8 +20,8 @@ public class Main {
             em.getTransaction().begin();
 
             Product p = new Product();
-            p.setId(2L);
-            p.setName("Chocolate");
+            p.setId(3L);
+            p.setName("Coffee");
 
             em.persist(p);  // add this to the context -> NOT AN INSERT QUERY
 
