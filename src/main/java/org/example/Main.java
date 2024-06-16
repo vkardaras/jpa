@@ -2,8 +2,8 @@ package org.example;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import org.example.entities.Comment;
-import org.example.entities.Post;
+import org.example.entities.Group;
+import org.example.entities.User;
 import org.example.persistence.CustomPersistenceUnitInfo;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
@@ -16,7 +16,7 @@ public class Main {
 
         Map<String, String> props = new HashMap<>();
         props.put("hibernate.show_sql", "true");
-        props.put("hibernate.hbm2ddl.auto", "create");  // create, none, update
+//        props.put("hibernate.hbm2ddl.auto", "create");  // create, none, update
 
         EntityManagerFactory emf = new HibernatePersistenceProvider()
                 .createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(), props);
@@ -25,21 +25,24 @@ public class Main {
         try {
             em.getTransaction().begin();
 
-            Post p = new Post();
-            p.setTitle("Post 1");
-            p.setContent("Post 1 desc");
+            User u1 = new User();
+            u1.setName("User 1");
+            User u2 = new User();
+            u2.setName("User 2");
 
-            Comment c1  = new Comment();
-            c1.setContent("Content comment 1");
-            Comment c2  = new Comment();
-            c2.setContent("Content comment 2");
+            Group g1 = new Group();
+            g1.setName("Group 1");
+            Group g2 = new Group();
+            g2.setName("Group 2");
 
-            p.setComments(List.of(c1, c2));
-            c1.setPost(p);
-            c2.setPost(p);
+            g1.setUsers(List.of(u1, u2));
+            g2.setUsers(List.of(u2));
 
-            em.persist(p);
-//            em.persist(c1); // Not needed because of cascade = CascadeType.PERSIST in the Post table
+            u1.setGroups(List.of(g1));
+            u2.setGroups(List.of(g1, g2));
+
+            em.persist(g1);
+            em.persist(g2);
 
             em.getTransaction().commit(); // end of transaction
         } finally {
