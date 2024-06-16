@@ -60,8 +60,8 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
 
     @Override
     public List<String> getManagedClassNames() {
-        return List.of("org.example.entities.Post",
-                "org.example.entities.Comment");
+        return List.of("org.example.entities.User",
+                "org.example.entities.Group");
     }
 
     @Override
