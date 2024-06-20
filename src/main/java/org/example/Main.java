@@ -2,14 +2,14 @@ package org.example;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
-import org.example.entities.Product;
+import org.example.dto.CountedEnrollmentForStudent;
+import org.example.dto.EnrolledStudent;
+import org.example.entities.Student;
 import org.example.persistence.CustomPersistenceUnitInfo;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Main {
@@ -26,44 +26,61 @@ public class Main {
         try {
             em.getTransaction().begin();
 
-            // SELECT, UPDATE, DELETE
+//            String jpql = """
+//                    SELECT s, e FROM Student s JOIN s.enrollments e
+//                    """;
+
+//            String jpql = """
+//                    SELECT s, e FROM Student s, Enrollment e WHERE s.id = e.student.id
+//                    """;
+
+//            String jpql = """
+//                    SELECT s, e FROM Student s, Enrollment e WHERE s = e.student
+//                    """;
+
+//            String jpql = """
+//                    SELECT s, e FROM Student s LEFT JOIN s.enrollments e
+//                    """;
+
+//            TypedQuery<Object[]> q = em.createQuery(jpql, Object[].class);
+//            q.getResultList().forEach(o -> System.out.println(o[0] + " " + o[1]));
+
+//            String jpql = """
+//                    SELECT NEW org.example.dto.EnrolledStudent(s, e) FROM Student s JOIN s.enrollments e
+//                    """;
 
             /*
-            // String jpql = "SELECT p FROM Product p";
-            // String jpql = "SELECT p FROM Product p WHERE p.price > 5";
-            String jpql = "SELECT p FROM Product p WHERE p.price > :price AND p.name LIKE :name";
+            String jpql = """
+                    SELECT NEW org.example.dto.EnrolledStudent(s, e) FROM Student s JOIN s.enrollments e
+                    """;
 
-            // SELECT p FROM Product p      ===> Fetch all the attributes of the Product entity from the current context
-            // SELECT * FROM Product        ===> Fetch all the columns from the table product
-            TypedQuery<Product> q = em.createQuery(jpql, Product.class);
-
-            q.setParameter("price", 5);
-            q.setParameter("name", "%a%"); // LIKE
-
-            List<Product> products = q.getResultList();
-
-            for (Product p: products) {
-                System.out.println(p);
-            }
+            TypedQuery<EnrolledStudent> q = em.createQuery(jpql, EnrolledStudent.class);
+            q.getResultList().forEach(o -> System.out.println(o.student() + " " + o.enrollment()));
 
              */
 
+//            String jpql = """
+//                    SELECT s FROM Student s WHERE
+//                        (SELECT COUNT(e) FROM Enrollment e WHERE e.student.id = s.id) > 1
+//                    """;
 
-            String jpql = "SELECT AVG(p.price) FROM Product p"; // AVG, SUM, MIN, MAX ...
+            /*
+            String jpql = """
+                    SELECT (SELECT COUNT(e) FROM Enrollment e WHERE e.student = s) FROM Student s
+                    """;
 
-            TypedQuery<Double> q = em.createQuery(jpql, Double.class);
+            TypedQuery<Student> q = em.createQuery(jpql, Student.class);
+            q.getResultList().forEach(System.out::println);
 
-            Double avg = q.getSingleResult();
+             */
 
-            System.out.println(avg);
+            String jpql = """
+                    SELECT NEW org.example.dto.CountedEnrollmentForStudent(s, (SELECT COUNT(e) FROM Enrollment e WHERE e.student = s))
+                    FROM Student s
+                    """;
 
-            jpql = "SELECT COUNT(p.price) FROM Product p"; // AVG, SUM, MIN, MAX ...
-
-            TypedQuery<Long> q2 = em.createQuery(jpql, Long.class);
-
-            Long count = q2.getSingleResult();
-
-            System.out.println(count);
+            TypedQuery<CountedEnrollmentForStudent> q = em.createQuery(jpql, CountedEnrollmentForStudent.class);
+            q.getResultList().forEach(o -> System.out.println(o.s() + " " + o.count()));
 
             em.getTransaction().commit(); // end of transaction
         } finally {
