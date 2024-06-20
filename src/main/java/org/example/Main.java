@@ -2,13 +2,11 @@ package org.example;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
-import org.example.dto.CountedEnrollmentForStudent;
-import org.example.dto.CountedEnrollmentForStudentName;
-import org.example.dto.EnrolledStudent;
-import org.example.entities.DistinctStudent;
-import org.example.entities.Student;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import org.example.entities.Customer;
 import org.example.persistence.CustomPersistenceUnitInfo;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 
@@ -29,23 +27,19 @@ public class Main {
         try {
             em.getTransaction().begin();
 
-            /*
-            String sql = """
-                    SELECT * FROM student
-                    """;
+            CriteriaBuilder builder = em.getCriteriaBuilder();
 
-            Query q = em.createNativeQuery(sql, Student.class);
-            q.getResultList().forEach(System.out::println);
+//            CriteriaQuery<Customer> cp = builder.createQuery(Customer.class);
+//            Root<Customer> customerRoot = cp.from(Customer.class);
+//            cp.select(customerRoot); // SELECT c FROM Customer c
+//            TypedQuery<Customer> query = em.createQuery(cp);
 
-             */
+            CriteriaQuery<String> cp = builder.createQuery(String.class);
+            Root<Customer> customerRoot = cp.from(Customer.class);
+            cp.multiselect(customerRoot.get("name")); // SELECT c.name FROM Customer c
+            TypedQuery<String> query = em.createQuery(cp);
 
-            // How to create a view
-            // CREATE VIEW view_unique_students AS
-            // SELECT DISTINCT name FROM student
-
-            String sql = "SELECT s FROM DistinctStudent s";
-            TypedQuery<DistinctStudent> q = em.createQuery(sql, DistinctStudent.class);
-            q.getResultList().forEach(System.out::println);
+            query.getResultList().forEach(System.out::println);
 
             em.getTransaction().commit(); // end of transaction
         } finally {
