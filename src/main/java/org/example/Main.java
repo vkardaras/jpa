@@ -2,10 +2,12 @@ package org.example;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.example.dto.CountedEnrollmentForStudent;
 import org.example.dto.CountedEnrollmentForStudentName;
 import org.example.dto.EnrolledStudent;
+import org.example.entities.DistinctStudent;
 import org.example.entities.Student;
 import org.example.persistence.CustomPersistenceUnitInfo;
 import org.hibernate.jpa.HibernatePersistenceProvider;
@@ -28,32 +30,21 @@ public class Main {
             em.getTransaction().begin();
 
             /*
-            String jpql = """
-                    SELECT NEW org.example.dto.CountedEnrollmentForStudent(s, COUNT(s))
-                    FROM Student s
-                    GROUP BY s
+            String sql = """
+                    SELECT * FROM student
                     """;
 
-            TypedQuery<CountedEnrollmentForStudent> q = em.createQuery(jpql, CountedEnrollmentForStudent.class);
-            q.getResultList().forEach(o -> System.out.println(o.s() + " " + o.count()));
+            Query q = em.createNativeQuery(sql, Student.class);
+            q.getResultList().forEach(System.out::println);
 
              */
 
-            /*
-            String jpql = """
-                    SELECT NEW org.example.dto.CountedEnrollmentForStudentName(s.name, COUNT(s))
-                    FROM Student s
-                    GROUP BY s.name
-                    HAVING s.name LIKE '%e'
-                    ORDER BY s.name DESC
-                    """;
+            // How to create a view
+            // CREATE VIEW view_unique_students AS
+            // SELECT DISTINCT name FROM student
 
-            TypedQuery<CountedEnrollmentForStudentName> q = em.createQuery(jpql, CountedEnrollmentForStudentName.class);
-            q.getResultList().forEach(o -> System.out.println(o.s() + " " + o.count()));
-
-             */
-
-            TypedQuery<Student> q = em.createNamedQuery("getAllEnrolledStudents", Student.class);
+            String sql = "SELECT s FROM DistinctStudent s";
+            TypedQuery<DistinctStudent> q = em.createQuery(sql, DistinctStudent.class);
             q.getResultList().forEach(System.out::println);
 
             em.getTransaction().commit(); // end of transaction
