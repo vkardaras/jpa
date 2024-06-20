@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS student(
   INSERT INTO student (id, name) VALUES (2, 'Bob');
   INSERT INTO student (id, name) VALUES (3, 'Charlie');
   INSERT INTO student (id, name) VALUES (4, 'Josh');
+  INSERT INTO student (id, name) VALUES (5, 'Alice');
+  INSERT INTO student (id, name) VALUES (6, 'Josh');
 
   INSERT INTO course (id, title) VALUES (1, 'Mathematics');
   INSERT INTO course (id, title) VALUES (2, 'Physics');
