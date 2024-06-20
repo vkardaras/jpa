@@ -1,15 +1,15 @@
 CREATE TABLE IF NOT EXISTS student(
- id INTEGER NOT NULL PRIMARY KEY,
+ id SERIAL NOT NULL PRIMARY KEY,
  name TEXT
  );
 
  CREATE TABLE IF NOT EXISTS course(
-  id INTEGER NOT NULL PRIMARY KEY,
-  title TEXT
+  id SERIAL NOT NULL PRIMARY KEY,
+  name TEXT
   );
 
  CREATE TABLE IF NOT EXISTS enrollment(
-  id INTEGER NOT NULL PRIMARY KEY,
+  id SERIAL NOT NULL PRIMARY KEY,
   enrollmentDate DATE NOT NULL,
   student_id BIGINT REFERENCES student(id),
   course_id BIGINT REFERENCES student(id)
@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS student(
   INSERT INTO student (id, name) VALUES (1, 'Alice');
   INSERT INTO student (id, name) VALUES (2, 'Bob');
   INSERT INTO student (id, name) VALUES (3, 'Charlie');
-  INSERT INTO student (id, name) VALUES (4, 'Josh');
 
   INSERT INTO course (id, title) VALUES (1, 'Mathematics');
   INSERT INTO course (id, title) VALUES (2, 'Physics');

@@ -1,21 +1,18 @@
 package org.example.entities;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
-public class Product {
-
+public class Student {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-    private BigDecimal price;
+    @OneToMany(mappedBy = "student")
+    private List<Enrollment> enrollments;
 
     public Long getId() {
         return id;
@@ -33,20 +30,19 @@ public class Product {
         this.name = name;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
     }
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "Student{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", price=" + price +
                 '}';
     }
 }
