@@ -1,13 +1,14 @@
 package org.example.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "view_unique_students")
-public class DistinctStudent {
+public class Customer {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
@@ -29,7 +30,7 @@ public class DistinctStudent {
 
     @Override
     public String toString() {
-        return "DistinctStudent{" +
+        return "Student{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
