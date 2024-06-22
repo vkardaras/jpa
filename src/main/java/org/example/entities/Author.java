@@ -6,6 +6,19 @@ import java.util.List;
 
 @Entity
 @Table(name = "authors")
+@NamedEntityGraphs(value = {
+        @NamedEntityGraph(
+                name = "Author.eagerlyFetchBooks",
+                attributeNodes = @NamedAttributeNode("books")
+        ),
+        @NamedEntityGraph(
+                name = "Author.eagerlyFetchBookShops",
+                subgraphs = @NamedSubgraph(
+                        name = "books",
+                        attributeNodes = @NamedAttributeNode("bookShops")
+                )
+        )
+})
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
